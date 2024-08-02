@@ -14,8 +14,8 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [],
                 userRemoteConfigs: [[credentialsId: GITCREDENTIAL, url: GITWEBADD]]])
-                 slackSend (
-                    channel: '#dep02',
+                slackSend (
+                    channel: '#jenkins_notification',
                     color: '#FFFF00',
                     message: "STARTED: ${currentBuild.number}"
                 )
@@ -93,10 +93,18 @@ pipeline {
             }
             post {
                 failure {
-                    sh "echo failed"
+                    slackSend (
+                    channel: '#jenkins_notification',
+                    color: '##FF0000',
+                    message: "Failed: ${currentBuild.number}"
+                )
                 }
                 success {
-                    sh "echo success"
+                    slackSend (
+                    channel: '#jenkins_notification',
+                    color: '#FFFF00',
+                    message: "Success: ${currentBuild.number}"
+                )
                 }
             }
         }
