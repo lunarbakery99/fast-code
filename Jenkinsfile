@@ -10,19 +10,6 @@ pipeline {
         DOCKERHUBCREDENTIAL='docker_cre'
    }
     stages {
-        stage('start') {
-            steps {
-                sh "echo hello jenkins!!"
-                }
-            post {
-                failure {
-                    sh "echo failed"
-                }
-                success {
-                    sh "echo success"
-                }
-            }
-        }
         stage('Checkout Github') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [],
@@ -37,10 +24,11 @@ pipeline {
                 }
             }
         }
-        stage('Docker Image Build') {
+        stage('docker image build') {
             steps {
                 sh "docker build -t ${DOCKERHUB}:${currentBuild.number} ."
-                // currentBuild.number : Jenkins가 제공하는 build number variable
+                // currentBuild.number 젠킨스가 제공하는 빌드넘버 변수
+                
             }
             post {
                 failure {
@@ -77,12 +65,13 @@ pipeline {
                 sh "git config --global user.name ${GITNAME}"
                 sh "sed -i 's@${DOCKERHUB}:.*@${DOCKERHUB}:${currentBuild.number}@g' fast.yml"
 
-                sh "got add ."
-                sh "git commit -m 'fixed tag ${currentBuild.number}'"
+                sh "git add ."
                 sh "git branch -M main"
+                sh "git commit -m 'fixed tag ${currentBuild.number}'"
+                sh "git remote remove origin"
                 sh "git remote add origin ${GITSSHADD}"
                 sh "git push origin main"
-                }
+            }
             post {
                 failure {
                     sh "echo manifest update failed"
@@ -94,8 +83,8 @@ pipeline {
         }
         stage('start') {
             steps {
-                sh "echo hello jenkins!!"
-                }
+                sh "echo hello jenkins!!!"
+            }
             post {
                 failure {
                     sh "echo failed"
@@ -105,5 +94,6 @@ pipeline {
                 }
             }
         }
+
     }
 }
