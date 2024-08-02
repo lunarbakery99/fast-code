@@ -14,6 +14,12 @@ pipeline {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [],
                 userRemoteConfigs: [[credentialsId: GITCREDENTIAL, url: GITWEBADD]]])
+                 slackSend (
+                    channel: '#dep02',
+                    color: '#FFFF00',
+                    message: "STARTED: ${currentBuild.number}"
+                )
+
             }
             post {
                 failure {
