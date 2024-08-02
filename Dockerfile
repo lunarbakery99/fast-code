@@ -6,4 +6,4 @@
 # CMD ["uvicorn","main:app","--host","0.0.0.0","--port","8000"]
 
 FROM public.ecr.aws/docker/library/nginx:stable-perl
-COPY index.html /usr/share/nginx/html/index.html
+RUN echo "CI/CD 성공!!!" > /usr/share/nginx/html/index.html
