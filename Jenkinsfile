@@ -24,33 +24,23 @@ pipeline {
                 }
             }
         }
-        stage('start') {
+        stage('Docker Image Build') {
             steps {
-                sh "echo hello jenkins!!!"
+                sh "docker build -t ${DOCKERHUB}:${currentBuild.number} ."
+                sh "docker build -t ${DOCKERHUB}:latest ."
+                // currentBuild.number : Jenkins가 제공하는 build number variable
+                // 
             }
             post {
                 failure {
-                    sh "echo failed"
+                    sh "echo image build failed"
                 }
                 success {
-                    sh "echo success"
+                    sh "echo image build success"
                 }
             }
         }
         stage('start2') {
-            steps {
-                sh "echo hello jenkins!!!"
-            }
-            post {
-                failure {
-                    sh "echo failed"
-                }
-                success {
-                    sh "echo success"
-                }
-            }
-        }
-        stage('start3') {
             steps {
                 sh "echo hello jenkins!!!"
             }
