@@ -93,6 +93,6 @@ pipeline {
                     sh "echo success"
                 }
             }
-        }g
+        }
     }
 }
